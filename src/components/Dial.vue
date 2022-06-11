@@ -1,26 +1,37 @@
 <template>
-  <div
-    v-drag="onDrag"
-    class="box"
-    :style="{
-      'background-image': `conic-gradient(blue ${dialValue}%, gray ${dialValue}%)`,
-    }"
-  >
-    <div class="box-1">
+  <div v-drag="onDrag" class="dial">
+    <div
+      class="dial-wheel"
+      :style="{
+        'background-image': `conic-gradient(rgb(140,239,252) ${dialValue}%, transparent ${dialValue}%)`,
+      }"
+    ></div>
+
+    <div class="dial-cover">
       {{ parseInt(dialValue) }}
     </div>
 
     <div
-      class="box-2"
+      class="dial-dot"
       :style="{ transform: `rotate(${(360 * dialValue) / 100}deg)` }"
     ></div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
-const dialValue = ref(0);
+const emit = defineEmits(["change"]);
+
+const props = defineProps({
+  value: { type: Number, default: 0 },
+});
+
+const dialValue = ref(props.value);
+
+watch(dialValue, (val) => {
+  emit("change", val);
+});
 
 const pC = { x: 0, y: 0 },
   pA = { x: 0, y: 0 },
@@ -61,49 +72,44 @@ function onDrag(event) {
 </script>
 
 <style scoped>
-.box {
+.dial {
   position: relative;
-  height: 120px;
-  width: 120px;
-  border-radius: 50%;
   user-select: none;
+  height: 74px;
+  width: 74px;
+  background-image: url("@/assets/dial_bg.png");
+  background-size: 100%;
 }
 
-.box-1 {
+.dial-wheel {
   position: absolute;
-  left: 10px;
-  top: 10px;
-  height: 100px;
-  width: 100px;
+  left: -10px;
+  top: -10px;
+  height: 94px;
+  width: 94px;
   border-radius: 50%;
-  background-color: rgb(42, 44, 45);
+  mask: radial-gradient(transparent 40px, #000 10px);
+}
+
+.dial-cover {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
   color: white;
-  font-size: 24px;
+  font-size: 16px;
 }
 
-.box-2 {
+.dial-dot {
   position: absolute;
-  left: 50px;
-  top: 10px;
-  height: 20px;
-  width: 20px;
-  border-radius: 50%;
-  background-color: rgb(239, 11, 144);
-  transform-origin: 10px 50px;
-  cursor: pointer;
-  border: 1px solid #fff;
-}
-
-@keyframes A {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
+  left: 31px;
+  top: 13px;
+  height: 13px;
+  width: 13px;
+  background-image: url("@/assets/dial_dot.png");
+  transform-origin: 0px 31px;
 }
 </style>
