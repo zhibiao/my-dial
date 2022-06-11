@@ -1,7 +1,5 @@
 <template>
-  <div class="penel">
-    <Dial />
-  </div>
+  <Dial />
 </template>
 
 <script setup>
@@ -20,14 +18,5 @@ body {
 }
 
 #app {
-}
-
-.penel {
-  width: 1275px;
-  height: 143px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  background-image: url("@/assets/penel_bg.png");
 }
 </style>
